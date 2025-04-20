@@ -1,0 +1,1 @@
+1. saya menggunakan NGINX dan APACHE(httpd)
