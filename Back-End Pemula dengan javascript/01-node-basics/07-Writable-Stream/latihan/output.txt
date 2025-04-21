@@ -1,0 +1,4 @@
+Ini merupakan text baris pertama
+Ini merupakan text baris kedua
+Ini merupakan text baris ketiga
+Ini merupakan text baris keempat
