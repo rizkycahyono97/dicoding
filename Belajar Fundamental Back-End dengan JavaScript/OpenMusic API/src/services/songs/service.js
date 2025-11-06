@@ -42,11 +42,28 @@ class SongsService {
     return result.rows[0].id;
   }
 
-  async getSongs() {
-    const result = await this._pool.query(
-      'SELECT id, title, performer FROM songs'
-    );
+  async getSongs(title, performer) {
+    let baseQuery = 'SELECT id, title, performer FROM songs';
+    const conditions = [];
+    const values = [];
 
+    // filter berdasarkan title
+    if (title) {
+      values.push(`%${title.toLowerCase()}%`);
+      conditions.push(`LOWER(title) LIKE $${values.length}`);
+    }
+
+    // filter berdasarkan performer
+    if (performer) {
+      values.push(`%${performer.toLowerCase()}%`);
+      conditions.push(`LOWER(performer) LIKE $${values.length}`);
+    }
+
+    if (conditions.length > 0) {
+      baseQuery += ` WHERE ${conditions.join(' AND ')}`;
+    }
+
+    const result = await this._pool.query(baseQuery, values);
     return result.rows;
   }
 
