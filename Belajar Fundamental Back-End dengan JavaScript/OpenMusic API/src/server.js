@@ -19,10 +19,10 @@ const init = async () => {
   await server.register([
     {
       plugin: albums
+    },
+    {
+      plugin: songs
     }
-    // {
-    //   plugin: songs
-    // }
   ]);
 
   await server.start();
