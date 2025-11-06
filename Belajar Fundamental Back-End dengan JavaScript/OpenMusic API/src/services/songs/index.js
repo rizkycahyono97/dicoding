@@ -2,7 +2,6 @@ import SongsService from './service.js';
 import SongsHandler from './handler.js';
 import routes from './routes.js';
 import SongValidator from '../../validator/songs/index.js';
-import { version } from 'joi';
 
 export default {
   name: 'songs',

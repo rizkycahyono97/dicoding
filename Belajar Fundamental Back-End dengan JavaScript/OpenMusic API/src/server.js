@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import Hapi from '@hapi/hapi';
 import albums from './services/albums/index.js';
-// import songs from './services/songs/index';
+import songs from './services/songs/index.js';
 
 dotenv.config();
 
