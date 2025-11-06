@@ -16,7 +16,7 @@ class SongsService {
     const updatedAt = createdAt;
 
     const query = {
-      text: `INSERT INTO songs (id, title, year, genre, performer, duration, "albumId", created_at, updated_at)
+      text: `INSERT INTO songs (id, title, year, genre, performer, duration, "album_id", created_at, updated_at)
         VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING id
       `,
@@ -66,18 +66,18 @@ class SongsService {
 
   async editSongById(id, { title, year, genre, performer, duration, albumId }) {
     const updatedAt = new Date().toISOString();
+
     const query = {
       text: `UPDATE songs
-        SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, "albumId" = $6, updated_at = $7
-        WHERE id = $8 RETURNING id
-      `,
-      values: [title, year, genre, performer, duration, albumId]
+           SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, album_id = $6, updated_at = $7
+           WHERE id = $8 RETURNING id`,
+      values: [title, year, genre, performer, duration, albumId, updatedAt, id]
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new NotFoundError('gagal memperbarui lagu, id tidak ditemukan');
+      throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
   }
 

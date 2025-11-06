@@ -92,8 +92,9 @@ class SongsHandler {
 
   async putSongByIdHandler(request, h) {
     try {
-      this._validator.validateSongPayload(request);
-      const id = request.params;
+      this._validator.validateSongPayload(request.payload);
+
+      const { id } = request.params;
       const { title, year, genre, performer, duration, albumId } =
         request.payload;
 
@@ -107,7 +108,7 @@ class SongsHandler {
       });
 
       return {
-        staus: 'success',
+        status: 'success',
         message: 'Lagu berhasil diperbarui'
       };
     } catch (error) {
