@@ -1,6 +1,6 @@
 import ClientError from '../../exceptions/ClientError.js';
 
-class AlbunHandler {
+class AlbumsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
@@ -49,11 +49,11 @@ class AlbunHandler {
   async getAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
-      const album = await this._service.getAlbumId(id);
+      const album = await this._service.getAlbumById(id);
 
       return {
         status: 'success',
-        dataa: {
+        data: {
           album
         }
       };
@@ -83,7 +83,7 @@ class AlbunHandler {
       const { id } = request.params;
       const { name, year } = request.payload;
 
-      await this._validator.editAlbumById(id, { name, year });
+      await this._service.editAlbumById(id, { name, year });
 
       return {
         status: 'success',
@@ -98,17 +98,18 @@ class AlbunHandler {
         response.code(error.statusCode);
         return response;
       }
+
       const response = h.response({
         status: 'error',
-        message: 'INTERNAL_SERVER_ERROR'
+        message: 'Maaf, terjadi kegagalan pada server kami.'
       });
       response.code(500);
-      console.log(error);
+      console.error(error);
       return response;
     }
   }
 
-  async deleteAlbumById(request, h) {
+  async deleteAlbumByIdHandler(request, h) {
     try {
       const { id } = request.params;
       await this._service.deleteAlbumById(id);
@@ -136,3 +137,5 @@ class AlbunHandler {
     }
   }
 }
+
+export default AlbumsHandler;

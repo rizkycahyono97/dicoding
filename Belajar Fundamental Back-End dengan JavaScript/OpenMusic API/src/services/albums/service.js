@@ -63,11 +63,11 @@ class AlbumsService {
 
   async deleteAlbumById(id) {
     const query = {
-      text: 'DELETE FROM albums WHERE id = $1',
+      text: 'DELETE FROM albums WHERE id = $1 RETURNING id',
       values: [id]
     };
 
-    const result = this._pool.query(query);
+    const result = await this._pool.query(query);
 
     if (!result.rowCount) {
       throw new NotFoundError(
