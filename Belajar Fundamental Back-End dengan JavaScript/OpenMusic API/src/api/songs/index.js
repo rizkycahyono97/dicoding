@@ -11,5 +11,6 @@ export default {
     const handler = new SongsHandler(service, SongValidator);
 
     server.route(routes(handler));
+    console.log('Plugin songs terdaftar');
   }
 };
