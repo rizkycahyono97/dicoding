@@ -15,6 +15,7 @@
   "dependencies": {
     "@hapi/hapi": "^21.4.3",
     "@hapi/jwt": "^3.2.1",
+    "auto-bind": "^5.0.1",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "joi": "^18.0.1",

@@ -23,8 +23,13 @@ import AuthenticationsService from './services/postgres/AuthenticationsService.j
 import TokenManager from './tokenize/TokenManager.js';
 import AuthenticationsValidator from './validator/authentications/index.js';
 
+// playlist
+import PlaylistsService from './services/postgres/PlaylistsService.js';
+import PlaylistValidator from './validator/playlists/index.js';
+
 // error
 import ClientError from './exceptions/ClientError.js';
+import playlists from './api/playlists/index.js';
 
 dotenv.config();
 
@@ -93,6 +98,13 @@ const init = async () => {
         UsersService,
         tokenManager: TokenManager,
         validator: AuthenticationsValidator
+      }
+    },
+    {
+      plugin: playlists,
+      options: {
+        service: PlaylistsService,
+        validator: PlaylistValidator
       }
     }
   ]);
