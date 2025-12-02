@@ -1,5 +1,5 @@
-import AlbumsService from './service.js';
-import AlbumsHandler from './handler.js';
+import AlbumsService from '../../services/postgres/AlbumsService.js';
+import AlbumsHandler from '../../api/albums/handler.js';
 import routes from './routes.js';
 import AlbumValidator from '../../validator/albums/index.js';
 

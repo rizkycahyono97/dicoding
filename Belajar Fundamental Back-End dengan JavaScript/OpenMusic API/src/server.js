@@ -1,7 +1,11 @@
 import dotenv from 'dotenv';
 import Hapi from '@hapi/hapi';
-import albums from './services/albums/index.js';
-import songs from './services/songs/index.js';
+import AlbumsService from './services/postgres/AlbumsService.js';
+import SongsService from './services/postgres/SongsService.js';
+import albums from './api/albums/index.js';
+import AlbumValidator from './validator/albums/index.js';
+import songs from './api/songs/index.js';
+import SongValidator from './validator/songs/index.js';
 
 dotenv.config();
 
@@ -18,10 +22,18 @@ const init = async () => {
 
   await server.register([
     {
-      plugin: albums
+      plugin: albums,
+      options: {
+        service: AlbumsService,
+        validator: AlbumValidator
+      }
     },
     {
-      plugin: songs
+      plugin: songs,
+      options: {
+        service: SongsService,
+        validator: SongValidator
+      }
     }
   ]);
 
