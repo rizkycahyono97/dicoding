@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import Hapi from '@hapi/hapi';
+import Jwt from '@hapi/jwt';
 
 // album
 import AlbumsService from './services/postgres/AlbumsService.js';
@@ -15,6 +16,12 @@ import SongValidator from './validator/songs/index.js';
 import users from './api/users/index.js';
 import UsersService from './services/postgres/UsersService.js';
 import UsersValidator from './validator/users/index.js';
+
+// authentication
+import authentications from './api/authentications/index.js';
+import AuthenticationsService from './services/postgres/AuthenticationsService.js';
+import TokenManager from './tokenize/TokenManager.js';
+import AuthenticationsValidator from './validator/authentications/index.js';
 
 // error
 import ClientError from './exceptions/ClientError.js';
@@ -32,6 +39,31 @@ const init = async () => {
     }
   });
 
+  // external plugin
+  await server.register([
+    {
+      plugin: Jwt
+    }
+  ]);
+
+  // jwt auth
+  server.auth.strategy('openmusic_jwt', 'jwt', {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: process.env.ACCESS_TOKEN_AGE
+    },
+    validate: artifacts => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id
+      }
+    })
+  });
+
+  // plugin sendiri
   await server.register([
     {
       plugin: albums,
@@ -52,6 +84,15 @@ const init = async () => {
       options: {
         service: UsersService,
         validator: UsersValidator
+      }
+    },
+    {
+      plugin: authentications,
+      options: {
+        AuthenticationsService,
+        UsersService,
+        tokenManager: TokenManager,
+        validator: AuthenticationsValidator
       }
     }
   ]);

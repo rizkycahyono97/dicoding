@@ -2,6 +2,7 @@ import pg from 'pg';
 import { nanoid } from 'nanoid';
 import bcrypt from 'bcrypt';
 import InvariantError from '../../exceptions/InvariantError.js';
+import AuthenticationError from '../../exceptions/AuthenticationError.js';
 
 const { Pool } = pg;
 
@@ -43,6 +44,29 @@ class UsersService {
         'Gagal menambahkan user. Username sudah digunakan'
       );
     }
+  }
+
+  async verifyUserCredential(username, password) {
+    const query = {
+      text: 'SELECT id, password FROM users WHERE username = $1',
+      values: [username]
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new AuthenticationError('Kredential yang anda berikan salah');
+    }
+
+    const { id, password: hashedPassword } = result.rows[0];
+
+    const match = await bcrypt.compare(password, hashedPassword);
+
+    if (!match) {
+      throw new AuthenticationError('Kredential yang anda berikan salah');
+    }
+
+    return id;
   }
 }
 
