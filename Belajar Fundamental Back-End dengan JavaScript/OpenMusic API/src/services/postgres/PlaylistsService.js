@@ -72,18 +72,18 @@ class PlaylistsService {
     }
   }
 
-  async addSongToPlaylist(playlistId, songId) {
+  async addSongToPlaylist(playlistId, songId, userId) {
     const id = `playlist-song-${nanoid(16)}`;
     const query = {
       text: 'INSERT INTO playlist_songs VALUES($1, $2, $3) RETURNING id',
       values: [id, playlistId, songId]
     };
-
     const result = await this._pool.query(query);
 
     if (!result.rows[0].id) {
       throw new InvariantError('Lagu gagal ditambahkan ke playlist');
     }
+    await this.addActivity(playlistId, songId, userId, 'add');
   }
 
   async getSongsFromPlaylist(playlistId) {
@@ -134,7 +134,7 @@ class PlaylistsService {
     };
   }
 
-  async deleteSongFromPlaylist(playlistId, songId) {
+  async deleteSongFromPlaylist(playlistId, songId, userId) {
     const query = {
       text: 'DELETE FROM playlist_songs WHERE playlist_id = $1 AND song_id = $2 RETURNING id',
       values: [playlistId, songId]
@@ -145,6 +145,8 @@ class PlaylistsService {
     if (!result.rows.length) {
       throw new InvariantError('Lagu gagal ditambahkan');
     }
+
+    await this.addActivity(playlistId, songId, userId, 'add');
   }
 
   async verifySongExistence(songId) {
@@ -158,6 +160,37 @@ class PlaylistsService {
     if (!result.rows.length) {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
+  }
+
+  async addActivity(playlistId, songId, userId, action) {
+    const id = `activity-${nanoid(16)}`;
+    const time = new Date().toISOString();
+    const query = {
+      text: 'INSERT INTO playlist_song_activities VALUES($1, $2, $3, $4, $5, $6) RETURNING id',
+      values: [id, playlistId, songId, userId, action, time]
+    };
+
+    const result = await this._pool.query(query);
+    if (!result.rows.length) {
+      throw new InvariantError('Activitas gagal dicatat');
+    }
+  }
+
+  async getPlaylistActivities(playlistId) {
+    const query = {
+      text: `
+      SELECT users.username, songs.title, activities.action, activities.time
+      FROM playlist_song_activities activities
+      JOIN users ON users.id = activities.user_id
+      JOIN songs ON songs.id = activities.song_id
+      WHERE activities.playlist_id = $1
+      ORDER BY activities.time ASC
+    `,
+      values: [playlistId]
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows;
   }
 }
 
