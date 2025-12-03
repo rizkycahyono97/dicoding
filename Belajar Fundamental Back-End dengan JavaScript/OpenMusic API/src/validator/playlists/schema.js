@@ -1,7 +1,9 @@
 import Joi from 'joi';
 
-const PostPlaylistPayloadSchema = Joi.object({
+export const PostPlaylistPayloadSchema = Joi.object({
   name: Joi.string().required()
 });
 
-export default PostPlaylistPayloadSchema;
+export const PostPlaylistSongPayloadSchema = Joi.object({
+  songId: Joi.string().required()
+});

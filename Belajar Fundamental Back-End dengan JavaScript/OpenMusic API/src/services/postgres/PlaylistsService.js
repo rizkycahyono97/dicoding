@@ -149,7 +149,7 @@ class PlaylistsService {
 
   async verifySongExistence(songId) {
     const query = {
-      text: 'SELECT * FROM songs WHERE id = $1',
+      text: 'SELECT id FROM songs WHERE id = $1',
       values: [songId]
     };
 
