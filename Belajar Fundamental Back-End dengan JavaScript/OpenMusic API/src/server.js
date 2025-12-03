@@ -108,6 +108,12 @@ const init = async () => {
       }
     }
   ]);
+  // console.log(
+  //   server.table().map(r => ({
+  //     method: r.method,
+  //     path: r.path
+  //   }))
+  // );
 
   server.ext('onPreResponse', (request, h) => {
     const { response } = request;
