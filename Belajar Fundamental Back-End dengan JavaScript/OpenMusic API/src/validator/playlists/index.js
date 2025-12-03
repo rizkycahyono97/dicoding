@@ -3,7 +3,7 @@ import InvariantError from '../../exceptions/InvariantError.js';
 
 const PlaylistValidator = {
   validatePostPlaylistPayload: payload => {
-    const validationResult = PostPlaylistPayloadSchema(payload);
+    const validationResult = PostPlaylistPayloadSchema.validate(payload);
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);
     }
