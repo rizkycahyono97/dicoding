@@ -31,6 +31,10 @@ import PlaylistValidator from './validator/playlists/index.js';
 import ProducerService from './services/rabbitmq/ProducerService.js';
 import ExportsValidator from './validator/exports/index.js';
 
+// upload
+import StorageService from './services/storage/StorageService.js';
+import validateImageHeaders from './validator/uploads/index.js';
+
 // error
 import ClientError from './exceptions/ClientError.js';
 import playlists from './api/playlists/index.js';
